@@ -9,10 +9,9 @@ pipeline {
 
         stage('build image') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub2', url: 'https://index.docker.io/v1/') {
-                    sh label: '', script: 'docker build -t dungdt24042/demo-nodejs:v1 .'
-                    sh label: '', script: 'docker push dungdt24042/demo-nodejs:v1 .'
-                }
+                 sshagent (credentials: ['server-key']) {
+                    sh 'ssh -o StrictHostKeyChecking=no -l ec2-user 18.139.223.247 uname -a touch test.txt'
+                  }
             }
         }
 
