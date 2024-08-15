@@ -1,34 +1,28 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:dind'
+            args '-u root:root -p 3000:3000 --privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
-        REPO_URL = 'https://github.com/dungdt-dev/hello-nodejs2.git' // URL của repository
-        DOCKER_IMAGE = 'dungdt24042/demo-nodejs'
-        BUILD_NUMBER = 'v1'
+        CI = 'true'
     }
 
     stages {
-        stage('Clone code') {
-            steps {
-                git branch: 'master', url: "${REPO_URL}"
+    stage('Clone') {
+        steps {
+            git 'https://github.com/dungdt-dev/hello-nodejs2.git'
             }
         }
-
-        stage('Build Docker image') {
-            steps {
-                script {
-                    // Build Docker image
-                    def image = docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
-
-
-                }
+        stage('docker build') {
+            when {
+                branch 'master'
             }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
+            steps {
+                sh 'docker build -t dungdt24042/demo-nodejs:v1'
+            }
         }
     }
 }
