@@ -8,7 +8,7 @@ pipeline {
 
         stage('Build image') {
             steps {
-                sh 'docker build -t dungdt24042/demo-nodejs:v1 .
+                sh 'docker build -t dungdt24042/demo-nodejs:v1 .'
             }
         }
     }
