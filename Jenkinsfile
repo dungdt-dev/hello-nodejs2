@@ -9,7 +9,10 @@ pipeline {
 
         stage('Build image') {
             steps {
-                sh 'docker build -t dungdt24042/demo-nodejs:v1 .'
+               withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                  sh 'docker build -t dungdt24042/demo-nodejs:v1 .'
+                  sh 'docker push dungdt24042/demo-nodejs:v1'
+               }
             }
         }
     }
